@@ -1,3 +1,5 @@
+Menu website casa
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -186,8 +188,7 @@ db.collection("menu")
     const foodContainer = document.getElementById("foodSections");
     const drinkContainer = document.getElementById("drinksSections");
 
-    foodContainer.innerHTML = "";
-    drinkContainer.innerHTML = "";
+   // We do NOT clear containers manually anymore
 
     const foodSections = {};
     const drinkSections = {};
@@ -343,18 +344,43 @@ function selectCategory(button) {
     const food = document.getElementById("foodSections");
     const drinks = document.getElementById("drinksSections");
 
-    if (button.innerText.trim() === "FOOD") {
+    const category = button.innerText.trim();
+
+    if (category === "FOOD") {
+
         food.style.display = "block";
         drinks.style.display = "none";
-    }
 
-    if (button.innerText.trim() === "DRINKS") {
+    } else if (category === "DRINKS") {
+
         food.style.display = "none";
         drinks.style.display = "block";
+
+    } else {
+
+        // For now hide both until we build them
+        food.style.display = "none";
+        drinks.style.display = "none";
+    }
+}
+
+        // For now hide both until we build them
+        food.style.display = "none";
+        drinks.style.display = "none";
     }
 }
 
 </script>
+
+window.onload = function () {
+    document.getElementById("foodSections").style.display = "block";
+    document.getElementById("drinksSections").style.display = "none";
+};
+
+</body>
+
+</script>
+
 
 </body>
 
