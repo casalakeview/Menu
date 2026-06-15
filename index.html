@@ -1,3 +1,5 @@
+Menu website casa
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -93,6 +95,40 @@ div[onclick]{
     font-size:16px;
 }
 
+#categoryNav{
+    display:flex;
+    overflow-x:auto;
+    gap:12px;
+    padding:15px;
+    margin-bottom:20px;
+}
+
+#categoryNav::-webkit-scrollbar{
+    display:none;
+}
+
+.category-btn{
+    background:#121212;
+    color:white;
+    border:2px solid #4B5320;
+    border-radius:30px;
+    padding:12px 20px;
+    font-size:14px;
+    font-weight:bold;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:0.3s;
+}
+
+.category-btn.active{
+    background:#4B5320;
+    color:white;
+}
+
+.category-btn:hover{
+    background:#4B5320;
+}
+
 </style>
 
 </head>
@@ -106,6 +142,26 @@ div[onclick]{
 <p>Food Menu</p>
 
 </header>
+
+<div id="categoryNav">
+
+    <button class="category-btn active">
+        FOOD
+    </button>
+
+    <button class="category-btn">
+        DRINKS
+    </button>
+
+    <button class="category-btn">
+        QUAD BIKES
+    </button>
+
+    <button class="category-btn">
+        BOAT RIDES
+    </button>
+
+</div>
 
 <div id="foodSections"></div>
 
