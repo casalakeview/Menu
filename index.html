@@ -111,89 +111,77 @@ db.collection("menu")
 .where("archived", "==", false)
 .onSnapshot(snapshot => {
 
-    const container =
-        document.getElementById("foodSections");
+    const container = document.getElementById("foodSections");
+container.innerHTML = "";
 
-    container.innerHTML = "";
+const sections = {};
 
-    const sections = {};
+snapshot.forEach(doc => {
+    const food = doc.data();
 
-    snapshot.forEach(doc => {
+    if (!food.section) return;
 
-        const food = doc.data();
+    if (!sections[food.section]) {
+        sections[food.section] = [];
+    }
 
-        if (!food.section) return;
+    sections[food.section].push(food);
+});
 
-        if (!sections[food.section]) {
-            sections[food.section] = [];
-        }
+let html = `<h2 style="color:#4B5320;text-align:center;">FOOD MENU</h2>`;
 
-        sections[food.section].push(food);
+// We create each section
+Object.keys(sections).forEach(section => {
 
-    });
+    html += `
+        <div style="
+            margin:10px 0;
+            padding:12px;
+            background:#1a1a1a;
+            border-radius:10px;
+            color:white;
+            border:1px solid #4B5320;
+        ">
 
-    let html = `
-        <h2 style="color:#4B5320;text-align:center;">
-            FOOD MENU
-        </h2>
+            <!-- SECTION TITLE (CLICKABLE) -->
+            <div onclick="toggleFood(this)" style="
+                cursor:pointer;
+                font-weight:bold;
+            ">
+                ${section}
+            </div>
+
+            <!-- FOOD ITEMS (HIDDEN INITIALLY) -->
+            <div class="food-items" style="display:none; margin-top:10px;">
+
     `;
 
-    let index = 0;
-
-    Object.keys(sections).forEach(section => {
-
-        const sectionId = "sec_" + index;
+    sections[section].forEach(food => {
 
         html += `
-            <div class="accordion">
-
-                <div onclick="toggleSection('${sectionId}')" 
-                     style="
-                        background:#1a1a1a;
-                        padding:15px;
-                        margin:10px 0;
-                        color:white;
-                        border-left:4px solid #4B5320;
-                        cursor:pointer;
-                        border-radius:8px;
-                     ">
-
-                    ${section}
-
-                </div>
-
-                <div id="${sectionId}" style="display:none; padding:10px;">
-
-        `;
-
-        sections[section].forEach(food => {
-
-            html += `
-                <div class="food-card">
-
-                    <div class="food-name">
-                        ${food.name}
-                    </div>
-
-                    <div class="food-price">
-                        GHS ${Number(food.price).toFixed(2)}
-                    </div>
-
-                </div>
-            `;
-
-        });
-
-        html += `
-                </div>
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                padding:8px 0;
+                border-bottom:1px solid #333;
+            ">
+                <span>${food.name}</span>
+                <span style="color:#9CAF50;">
+                    GHS ${Number(food.price).toFixed(2)}
+                </span>
             </div>
         `;
 
-        index++;
-
     });
 
-    container.innerHTML = html;
+    html += `
+            </div>
+        </div>
+    `;
+
+});
+
+container.innerHTML = html;
 
 });
 
@@ -218,6 +206,16 @@ function toggleSection(id) {
     }
 }
 
+function toggleFood(element) {
+
+    const foodBox = element.nextElementSibling;
+
+    if (foodBox.style.display === "block") {
+        foodBox.style.display = "none";
+    } else {
+        foodBox.style.display = "block";
+    }
+}
 
 </script>
 
