@@ -82,25 +82,98 @@ h2{
 
 </header>
 
-<section>
+<div id="foodSections"></div>
 
-<h2>Breakfast</h2>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 
-<div class="food-grid">
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-<div class="food-card">
+<script>
 
-<div class="food-name">
+const firebaseConfig = {
+    apiKey: "AIzaSyBrsJteLnC0AJsqQN2EDD07vXQX4MBveQk",
+    authDomain: "casa-lake-view-resort.firebaseapp.com",
+    projectId: "casa-lake-view-resort",
+    storageBucket: "casa-lake-view-resort.firebasestorage.app",
+    messagingSenderId: "783691618625",
+    appId: "1:783691618625:web:fe6bf67bb4585947ce69c0",
+    measurementId: "G-2SLSV010SB"
+};
 
-Loading menu...
+firebase.initializeApp(firebaseConfig);
 
-</div>
+const db = firebase.firestore();
 
-</div>
+db.collection("menu")
+.where("category", "==", "food")
+.where("archived", "==", false)
+.onSnapshot(snapshot => {
 
-</div>
+    const container =
+        document.getElementById("foodSections");
 
-</section>
+    container.innerHTML = "";
+
+    const sections = {};
+
+    snapshot.forEach(doc => {
+
+        const food = doc.data();
+
+        if (!sections[food.section]) {
+            sections[food.section] = [];
+        }
+
+        sections[food.section].push(food);
+
+    });
+
+    Object.keys(sections).forEach(section => {
+
+        let html = `
+            <section>
+
+                <h2>${section}</h2>
+
+                <div class="food-grid">
+        `;
+
+        sections[section].forEach(food => {
+
+            html += `
+                <div class="food-card">
+
+                    <div class="food-name">
+
+                        ${food.name}
+
+                    </div>
+
+                    <div class="food-price">
+
+                        GHS ${Number(food.price).toFixed(2)}
+
+                    </div>
+
+                </div>
+            `;
+
+        });
+
+        html += `
+                </div>
+
+            </section>
+        `;
+
+        container.innerHTML += html;
+
+    });
+
+});
+
+
+</script>
 
 </body>
 
