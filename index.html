@@ -178,69 +178,99 @@ div[onclick]{
 
 <script>
 
-const firebaseConfig = {
-    apiKey: "AIzaSyBrsJteLnC0AJsqQN2EDD07vXQX4MBveQk",
-    authDomain: "casa-lake-view-resort.firebaseapp.com",
-    projectId: "casa-lake-view-resort",
-    storageBucket: "casa-lake-view-resort.firebasestorage.app",
-    messagingSenderId: "783691618625",
-    appId: "1:783691618625:web:fe6bf67bb4585947ce69c0",
-    measurementId: "G-2SLSV010SB"
-};
-
 firebase.initializeApp(firebaseConfig);
-
 const db = firebase.firestore();
 
 db.collection("menu")
-
-.onSnapshot(snapshot => {
-
 .where("archived", "==", false)
 .onSnapshot(snapshot => {
 
-    const container = document.getElementById("foodSections");
-container.innerHTML = "";
+    const foodContainer = document.getElementById("foodSections");
+    const drinkContainer = document.getElementById("drinksSections");
 
-const drinkContainer = document.getElementById("drinksSections");
-drinkContainer.innerHTML = "";
+    foodContainer.innerHTML = "";
+    drinkContainer.innerHTML = "";
 
-document.querySelectorAll('.drink-grid').forEach(el => {
-    el.innerHTML = "";
-});
+    const foodSections = {};
+    const drinkSections = {};
 
-const sections = {};
+    snapshot.forEach(doc => {
+        const item = doc.data();
 
-const drinkSections = {};
+        if (!item.section) return;
 
-snapshot.forEach(doc => {
-    const food = doc.data();
+        // 🍹 DRINKS
+        if (item.category === "drink") {
+            if (!drinkSections[item.section]) {
+                drinkSections[item.section] = [];
+            }
+            drinkSections[item.section].push(item);
+            return;
+        }
 
-if (food.category === "drink") {
+        // 🍽 FOOD
+        if (!foodSections[item.section]) {
+            foodSections[item.section] = [];
+        }
+        foodSections[item.section].push(item);
+    });
 
-    if (!drinkSections[food.section]) {
-        drinkSections[food.section] = [];
-    }
+    // =========================
+    // 🍽 FOOD RENDER
+    // =========================
 
-    drinkSections[food.section].push(food);
+    let foodHTML = `<h2 style="color:#4B5320;text-align:center;">FOOD MENU</h2>`;
 
-    return;
-}
+    Object.keys(foodSections).forEach(section => {
 
-    if (!food.section) return;
+        foodHTML += `
+        <div style="
+            margin:10px 0;
+            padding:12px;
+            background:#1a1a1a;
+            border-radius:10px;
+            color:white;
+            border:1px solid #4B5320;
+        ">
 
-    if (!sections[food.section]) {
-        sections[food.section] = [];
-    }
+            <div onclick="toggleFood(this)" style="cursor:pointer;font-weight:bold;">
+                ${section}
+            </div>
 
-    sections[food.section].push(food);
-});
+            <div class="food-items" style="display:none;margin-top:10px;">
+        `;
 
-let drinkHTML = `<h2 style="color:#4B5320;text-align:center;">DRINKS MENU</h2>`;
+        foodSections[section].forEach(food => {
 
-Object.keys(drinkSections).forEach(section => {
+            foodHTML += `
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    padding:8px 0;
+                    border-bottom:1px solid #333;
+                ">
+                    <span>${food.name}</span>
+                    <span style="color:#9CAF50;">
+                        GHS ${Number(food.price).toFixed(2)}
+                    </span>
+                </div>
+            `;
+        });
 
-    drinkHTML += `
+        foodHTML += `</div></div>`;
+    });
+
+    foodContainer.innerHTML = foodHTML;
+
+    // =========================
+    // 🍹 DRINKS RENDER
+    // =========================
+
+    let drinkHTML = `<h2 style="color:#4B5320;text-align:center;">DRINKS MENU</h2>`;
+
+    Object.keys(drinkSections).forEach(section => {
+
+        drinkHTML += `
         <div style="
             margin:10px 0;
             padding:12px;
@@ -255,143 +285,75 @@ Object.keys(drinkSections).forEach(section => {
             </div>
 
             <div style="margin-top:10px;">
-    `;
-
-    drinkSections[section].forEach(drink => {
-
-        drinkHTML += `
-            <div style="
-                display:flex;
-                justify-content:space-between;
-                padding:8px 0;
-                border-bottom:1px solid #333;
-            ">
-                <span>${drink.name}</span>
-                <span style="color:#9CAF50;">
-                    GHS ${Number(drink.price).toFixed(2)}
-                </span>
-            </div>
-        `;
-    });
-
-    drinkHTML += `
-            </div>
-        </div>
-    `;
-});
-
-document.getElementById("drinksSections").innerHTML = drinkHTML;
-
-let html = `<h2 style="color:#4B5320;text-align:center;">FOOD MENU</h2>`;
-
-// We create each section
-Object.keys(sections).forEach(section => {
-
-    html += `
-        <div style="
-            margin:10px 0;
-            padding:12px;
-            background:#1a1a1a;
-            border-radius:10px;
-            color:white;
-            border:1px solid #4B5320;
-        ">
-
-            <!-- SECTION TITLE (CLICKABLE) -->
-            <div onclick="toggleFood(this)" style="
-                cursor:pointer;
-                font-weight:bold;
-            ">
-                ${section}
-            </div>
-
-            <!-- FOOD ITEMS (HIDDEN INITIALLY) -->
-            <div class="food-items" style="display:none; margin-top:10px;">
-
-    `;
-
-    sections[section].forEach(food => {
-
-        html += `
-            <div style="
-                display:flex;
-                justify-content:space-between;
-                padding:8px 0;
-                border-bottom:1px solid #333;
-            ">
-                <span>${food.name}</span>
-                <span style="color:#9CAF50;">
-                    GHS ${Number(food.price).toFixed(2)}
-                </span>
-            </div>
         `;
 
+        drinkSections[section].forEach(drink => {
+
+            drinkHTML += `
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    padding:8px 0;
+                    border-bottom:1px solid #333;
+                ">
+                    <span>${drink.name}</span>
+                    <span style="color:#9CAF50;">
+                        GHS ${Number(drink.price).toFixed(2)}
+                    </span>
+                </div>
+            `;
+        });
+
+        drinkHTML += `</div></div>`;
     });
 
-    html += `
-            </div>
-        </div>
-    `;
-
+    drinkContainer.innerHTML = drinkHTML;
 });
 
-container.innerHTML = html;
-
-});
-
-let openSection = null;
-
-function toggleSection(id) {
-
-    const el = document.getElementById(id);
-
-    // close previous
-    if (openSection && openSection !== id) {
-        document.getElementById(openSection).style.display = "none";
-    }
-
-    // toggle current
-    if (el.style.display === "block") {
-        el.style.display = "none";
-        openSection = null;
-    } else {
-        el.style.display = "block";
-        openSection = id;
-    }
-}
+// =========================
+// TOGGLE FOOD
+// =========================
 
 function toggleFood(element) {
 
     const allBoxes = document.querySelectorAll(".food-items");
-
     const currentBox = element.nextElementSibling;
 
     allBoxes.forEach(box => {
-
-        // close ALL other sections
         if (box !== currentBox) {
             box.style.display = "none";
         }
-
     });
 
-    // toggle current section
-    if (currentBox.style.display === "block") {
-        currentBox.style.display = "none";
-    } else {
-        currentBox.style.display = "block";
-    }
+    currentBox.style.display =
+        currentBox.style.display === "block"
+        ? "none"
+        : "block";
 }
+
+// =========================
+// CATEGORY BUTTONS
+// =========================
 
 function selectCategory(button) {
 
     document.querySelectorAll(".category-btn")
-        .forEach(btn => {
-            btn.classList.remove("active");
-        });
+        .forEach(btn => btn.classList.remove("active"));
 
     button.classList.add("active");
 
+    const food = document.getElementById("foodSections");
+    const drinks = document.getElementById("drinksSections");
+
+    if (button.innerText.trim() === "FOOD") {
+        food.style.display = "block";
+        drinks.style.display = "none";
+    }
+
+    if (button.innerText.trim() === "DRINKS") {
+        food.style.display = "none";
+        drinks.style.display = "block";
+    }
 }
 
 </script>
