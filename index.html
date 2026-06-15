@@ -1,5 +1,3 @@
-Menu website casa
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -145,21 +143,25 @@ div[onclick]{
 
 <div id="categoryNav">
 
-    <button class="category-btn active">
-        FOOD
-    </button>
+    <button class="category-btn active"
+        onclick="selectCategory(this)">
+    FOOD
+</button>
 
-    <button class="category-btn">
-        DRINKS
-    </button>
+<button class="category-btn"
+        onclick="selectCategory(this)">
+    DRINKS
+</button>
 
-    <button class="category-btn">
-        QUAD BIKES
-    </button>
+<button class="category-btn"
+        onclick="selectCategory(this)">
+    QUAD BIKES
+</button>
 
-    <button class="category-btn">
-        BOAT RIDES
-    </button>
+<button class="category-btn"
+        onclick="selectCategory(this)">
+    BOAT RIDES
+</button>
 
 </div>
 
@@ -306,6 +308,17 @@ function toggleFood(element) {
     } else {
         currentBox.style.display = "block";
     }
+}
+
+function selectCategory(button) {
+
+    document.querySelectorAll(".category-btn")
+        .forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+    button.classList.add("active");
+
 }
 
 </script>
