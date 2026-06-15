@@ -1,3 +1,5 @@
+Menu website casa
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -206,12 +208,24 @@ function toggleSection(id) {
 
 function toggleFood(element) {
 
-    const foodBox = element.nextElementSibling;
+    const allBoxes = document.querySelectorAll(".food-items");
 
-    if (foodBox.style.display === "block") {
-        foodBox.style.display = "none";
+    const currentBox = element.nextElementSibling;
+
+    allBoxes.forEach(box => {
+
+        // close ALL other sections
+        if (box !== currentBox) {
+            box.style.display = "none";
+        }
+
+    });
+
+    // toggle current section
+    if (currentBox.style.display === "block") {
+        currentBox.style.display = "none";
     } else {
-        foodBox.style.display = "block";
+        currentBox.style.display = "block";
     }
 }
 
