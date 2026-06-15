@@ -1,3 +1,5 @@
+Menu website casa
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -116,9 +118,12 @@ db.collection("menu")
 
     const sections = {};
 
+    // Group foods by section
     snapshot.forEach(doc => {
 
         const food = doc.data();
+
+        if (!food.section) return;
 
         if (!sections[food.section]) {
             sections[food.section] = [];
@@ -128,12 +133,44 @@ db.collection("menu")
 
     });
 
-    Object.keys(sections).forEach(section => {
+    // Get section names in order
+    const sectionNames = Object.keys(sections);
 
-        let html = `
-            <section>
+    if (sectionNames.length === 0) {
+        container.innerHTML = `
+            <p style="color:white;text-align:center;">
+                No food items available yet
+            </p>
+        `;
+        return;
+    }
 
-                <h2>${section}</h2>
+    let html = `
+        <h2 style="
+            color:#4B5320;
+            text-align:center;
+            margin-bottom:20px;
+        ">
+            FOOD MENU
+        </h2>
+    `;
+
+    sectionNames.forEach(section => {
+
+        html += `
+            <section style="
+                margin-bottom:20px;
+            ">
+
+                <h3 style="
+                    color:white;
+                    background:#1a1a1a;
+                    padding:12px;
+                    border-left:4px solid #4B5320;
+                    border-radius:8px;
+                ">
+                    ${section}
+                </h3>
 
                 <div class="food-grid">
         `;
@@ -144,15 +181,11 @@ db.collection("menu")
                 <div class="food-card">
 
                     <div class="food-name">
-
                         ${food.name}
-
                     </div>
 
                     <div class="food-price">
-
                         GHS ${Number(food.price).toFixed(2)}
-
                     </div>
 
                 </div>
@@ -166,9 +199,9 @@ db.collection("menu")
             </section>
         `;
 
-        container.innerHTML += html;
-
     });
+
+    container.innerHTML = html;
 
 });
 
