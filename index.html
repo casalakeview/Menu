@@ -1,3 +1,5 @@
+Menu website casa
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -167,6 +169,9 @@ div[onclick]{
 
 <div id="foodSections"></div>
 
+<div id="drinksSections" style="display:none;">
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -188,17 +193,39 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 db.collection("menu")
-.where("category", "==", "food")
+
+.onSnapshot(snapshot => {
+
 .where("archived", "==", false)
 .onSnapshot(snapshot => {
 
     const container = document.getElementById("foodSections");
 container.innerHTML = "";
 
+const drinkContainer = document.getElementById("drinksSections");
+drinkContainer.innerHTML = "";
+
+document.querySelectorAll('.drink-grid').forEach(el => {
+    el.innerHTML = "";
+});
+
 const sections = {};
+
+const drinkSections = {};
 
 snapshot.forEach(doc => {
     const food = doc.data();
+
+if (food.category === "drink") {
+
+    if (!drinkSections[food.section]) {
+        drinkSections[food.section] = [];
+    }
+
+    drinkSections[food.section].push(food);
+
+    return;
+}
 
     if (!food.section) return;
 
@@ -208,6 +235,52 @@ snapshot.forEach(doc => {
 
     sections[food.section].push(food);
 });
+
+let drinkHTML = `<h2 style="color:#4B5320;text-align:center;">DRINKS MENU</h2>`;
+
+Object.keys(drinkSections).forEach(section => {
+
+    drinkHTML += `
+        <div style="
+            margin:10px 0;
+            padding:12px;
+            background:#1a1a1a;
+            border-radius:10px;
+            color:white;
+            border:1px solid #4B5320;
+        ">
+
+            <div style="font-weight:bold;">
+                ${section}
+            </div>
+
+            <div style="margin-top:10px;">
+    `;
+
+    drinkSections[section].forEach(drink => {
+
+        drinkHTML += `
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                padding:8px 0;
+                border-bottom:1px solid #333;
+            ">
+                <span>${drink.name}</span>
+                <span style="color:#9CAF50;">
+                    GHS ${Number(drink.price).toFixed(2)}
+                </span>
+            </div>
+        `;
+    });
+
+    drinkHTML += `
+            </div>
+        </div>
+    `;
+});
+
+document.getElementById("drinksSections").innerHTML = drinkHTML;
 
 let html = `<h2 style="color:#4B5320;text-align:center;">FOOD MENU</h2>`;
 
