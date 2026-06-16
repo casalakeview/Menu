@@ -1,3 +1,5 @@
+Menu website casa
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -166,9 +168,9 @@ div[onclick]{
 </div>
 
 <div id="foodSections"></div>
-
-<div id="drinksSections" style="display:none;">
-</div>
+<div id="drinksSections"></div>
+<div id="quadSections"></div>
+<div id="boatSections"></div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 
@@ -291,7 +293,7 @@ db.collection("menu")
 
     // CLICK HANDLERS (ALL SAME SYSTEM)
 
-    function attach(className, itemClass) {
+    function attach(className) {
 
         document.querySelectorAll("." + className + "-section-title")
         .forEach(el => {
