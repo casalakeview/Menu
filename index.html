@@ -198,8 +198,10 @@ db.collection("menu")
     const foodContainer = document.getElementById("foodSections");
     const drinkContainer = document.getElementById("drinksSections");
 
-    foodContainer.innerHTML = "";
-    drinkContainer.innerHTML = "";
+    document.getElementById("foodSections").innerHTML = "";
+document.getElementById("drinksSections").innerHTML = "";
+document.getElementById("quadSections").innerHTML = "";
+document.getElementById("boatSections").innerHTML = "";
 
     const foodSections = {};
     const drinkSections = {};
@@ -286,10 +288,17 @@ db.collection("menu")
         return html;
     }
 
-    foodContainer.innerHTML = render("FOOD MENU", foodSections, "food")
-        + render("DRINKS MENU", drinkSections, "drink")
-        + render("QUAD BIKE", quadSections, "quad")
-        + render("BOAT RIDES", boatSections, "boat");
+    document.getElementById("foodSections").innerHTML =
+    render("FOOD MENU", foodSections, "food");
+
+document.getElementById("drinksSections").innerHTML =
+    render("DRINKS MENU", drinkSections, "drink");
+
+document.getElementById("quadSections").innerHTML =
+    render("QUAD BIKES", quadSections, "quad");
+
+document.getElementById("boatSections").innerHTML =
+    render("BOAT RIDES", boatSections, "boat");
 
     // CLICK HANDLERS (ALL SAME SYSTEM)
 
