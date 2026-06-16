@@ -1,4 +1,4 @@
-new 
+vo 
 <!DOCTYPE html>
 <html lang="en">
 
@@ -145,23 +145,27 @@ div[onclick]{
 <div id="categoryNav">
 
     <button class="category-btn active"
-        onclick="selectCategory(this)">
-    FOOD
+        onclick="selectCategory(this)"
+        data-category="food">
+FOOD
 </button>
 
 <button class="category-btn"
-        onclick="selectCategory(this)">
-    DRINKS
+        onclick="selectCategory(this)"
+        data-category="drink">
+DRINKS
 </button>
 
 <button class="category-btn"
-        onclick="selectCategory(this)">
-    QUAD BIKES
+        onclick="selectCategory(this)"
+        data-category="quad">
+QUAD BIKES
 </button>
 
 <button class="category-btn"
-        onclick="selectCategory(this)">
-    BOAT RIDES
+        onclick="selectCategory(this)"
+        data-category="boat">
+BOAT RIDES
 </button>
 
 </div>
@@ -253,18 +257,19 @@ function selectCategory(button) {
     const quad = document.getElementById("quadSections");
     const boat = document.getElementById("boatSections");
 
-    // ❌ hide ALL first
+    // hide all
     food.style.display = "none";
     drinks.style.display = "none";
     quad.style.display = "none";
     boat.style.display = "none";
 
-    const category = button.innerText.trim();
+    // use DATA instead of text (THIS IS THE FIX)
+    const category = button.dataset.category;
 
-    if (category === "FOOD") food.style.display = "block";
-    if (category === "DRINKS") drinks.style.display = "block";
-    if (category === "QUAD BIKES") quad.style.display = "block";
-    if (category === "BOAT RIDES") boat.style.display = "block";
+    if (category === "food") food.style.display = "block";
+    if (category === "drink") drinks.style.display = "block";
+    if (category === "quad") quad.style.display = "block";
+    if (category === "boat") boat.style.display = "block";
 }
 
     function render(title, sections, className) {
