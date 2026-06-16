@@ -1,3 +1,4 @@
+new 
 <!DOCTYPE html>
 <html lang="en">
 
@@ -240,6 +241,32 @@ document.getElementById("boatSections").innerHTML = "";
         }
     });
 
+function selectCategory(button) {
+
+    document.querySelectorAll(".category-btn")
+        .forEach(btn => btn.classList.remove("active"));
+
+    button.classList.add("active");
+
+    const food = document.getElementById("foodSections");
+    const drinks = document.getElementById("drinksSections");
+    const quad = document.getElementById("quadSections");
+    const boat = document.getElementById("boatSections");
+
+    // ❌ hide ALL first
+    food.style.display = "none";
+    drinks.style.display = "none";
+    quad.style.display = "none";
+    boat.style.display = "none";
+
+    const category = button.innerText.trim();
+
+    if (category === "FOOD") food.style.display = "block";
+    if (category === "DRINKS") drinks.style.display = "block";
+    if (category === "QUAD BIKES") quad.style.display = "block";
+    if (category === "BOAT RIDES") boat.style.display = "block";
+}
+
     function render(title, sections, className) {
 
         let html = `<h2 style="color:#4B5320;text-align:center;">${title}</h2>`;
@@ -327,6 +354,13 @@ document.getElementById("boatSections").innerHTML =
     attach("quad");
     attach("boat");
 });
+
+window.onload = function () {
+    document.getElementById("foodSections").style.display = "block";
+    document.getElementById("drinksSections").style.display = "none";
+    document.getElementById("quadSections").style.display = "none";
+    document.getElementById("boatSections").style.display = "none";
+};
 
 </script>
 
