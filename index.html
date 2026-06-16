@@ -1,5 +1,3 @@
-Menu website casa
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -198,215 +196,128 @@ db.collection("menu")
     const foodContainer = document.getElementById("foodSections");
     const drinkContainer = document.getElementById("drinksSections");
 
-   foodContainer.innerHTML = "";
-drinkContainer.innerHTML = "";
+    foodContainer.innerHTML = "";
+    drinkContainer.innerHTML = "";
 
     const foodSections = {};
     const drinkSections = {};
+    const quadSections = {};
+    const boatSections = {};
 
     snapshot.forEach(doc => {
         const item = doc.data();
 
         if (!item.section) return;
 
-        // 🍹 DRINKS
+        // FOOD
+        if (item.category === "food") {
+            if (!foodSections[item.section]) foodSections[item.section] = [];
+            foodSections[item.section].push(item);
+            return;
+        }
+
+        // DRINK
         if (item.category === "drink") {
-            if (!drinkSections[item.section]) {
-                drinkSections[item.section] = [];
-            }
+            if (!drinkSections[item.section]) drinkSections[item.section] = [];
             drinkSections[item.section].push(item);
             return;
         }
 
-        // 🍽 FOOD
-        if (!foodSections[item.section]) {
-            foodSections[item.section] = [];
+        // QUAD BIKE
+        if (item.category === "quadbike") {
+            if (!quadSections[item.section]) quadSections[item.section] = [];
+            quadSections[item.section].push(item);
+            return;
         }
-        foodSections[item.section].push(item);
-    });
 
-    // =========================
-    // 🍽 FOOD RENDER
-    // =========================
-
-    let foodHTML = `<h2 style="color:#4B5320;text-align:center;">FOOD MENU</h2>`;
-
-    Object.keys(foodSections).forEach(section => {
-
-        foodHTML += `
-        <div style="
-            margin:10px 0;
-            padding:12px;
-            background:#1a1a1a;
-            border-radius:10px;
-            color:white;
-            border:1px solid #4B5320;
-        ">
-
-           <div class="food-section-title" style="cursor:pointer;font-weight:bold;">
-                ${section}
-            </div>
-
-            <div class="food-items" style="display:none;margin-top:10px;">
-        `;
-
-        foodSections[section].forEach(food => {
-
-            foodHTML += `
-                <div style="
-                    display:flex;
-                    justify-content:space-between;
-                    padding:8px 0;
-                    border-bottom:1px solid #333;
-                ">
-                    <span>${food.name}</span>
-                    <span style="color:#9CAF50;">
-                        GHS ${Number(food.price).toFixed(2)}
-                    </span>
-                </div>
-            `;
-        });
-
-        foodHTML += `</div></div>`;
-    });
-
-    foodContainer.innerHTML = foodHTML;
-
-document.querySelectorAll(".food-section-title").forEach(el => {
-    el.addEventListener("click", function () {
-        toggleFood(this);
-    });
-});
-
-    // =========================
-    // 🍹 DRINKS RENDER
-    // =========================
-
-    let drinkHTML = `<h2 style="color:#4B5320;text-align:center;">DRINKS MENU</h2>`;
-
-    Object.keys(drinkSections).forEach(section => {
-
-        drinkHTML += `
-        <div style="
-            margin:10px 0;
-            padding:12px;
-            background:#1a1a1a;
-            border-radius:10px;
-            color:white;
-            border:1px solid #4B5320;
-        ">
-
-            <div class="drink-section-title" style="cursor:pointer;font-weight:bold;">
-    ${section}
-</div>
-
-<div class="drink-items" style="display:none;margin-top:10px;">
-
-        `;
-
-        drinkSections[section].forEach(drink => {
-
-            drinkHTML += `
-                <div style="
-                    display:flex;
-                    justify-content:space-between;
-                    padding:8px 0;
-                    border-bottom:1px solid #333;
-                ">
-                    <span>${drink.name}</span>
-                    <span style="color:#9CAF50;">
-                        GHS ${Number(drink.price).toFixed(2)}
-                    </span>
-                </div>
-            `;
-        });
-
-        drinkHTML += `</div></div>`;
-    });
-
- drinkContainer.innerHTML = drinkHTML;
-
-// attach click events
-document.querySelectorAll(".drink-section-title").forEach(el => {
-    el.addEventListener("click", function () {
-
-        const allBoxes = document.querySelectorAll(".drink-items");
-        const currentBox = this.nextElementSibling;
-
-        allBoxes.forEach(box => {
-            if (box !== currentBox) {
-                box.style.display = "none";
-            }
-        });
-
-        currentBox.style.display =
-            currentBox.style.display === "block"
-            ? "none"
-            : "block";
-    });
-});
-
-});   
-
-// =========================
-// TOGGLE FOOD
-// =========================
-
-function toggleFood(element) {
-
-    const allBoxes = document.querySelectorAll(".food-items");
-    const currentBox = element.nextElementSibling;
-
-    allBoxes.forEach(box => {
-        if (box !== currentBox) {
-            box.style.display = "none";
+        // BOAT RIDE
+        if (item.category === "boatride") {
+            if (!boatSections[item.section]) boatSections[item.section] = [];
+            boatSections[item.section].push(item);
+            return;
         }
     });
 
-    currentBox.style.display =
-        currentBox.style.display === "block"
-        ? "none"
-        : "block";
-}
+    function render(title, sections, className) {
 
-// =========================
-// CATEGORY BUTTONS
-// =========================
+        let html = `<h2 style="color:#4B5320;text-align:center;">${title}</h2>`;
 
-function selectCategory(button) {
+        Object.keys(sections).forEach(section => {
 
-    document.querySelectorAll(".category-btn")
-        .forEach(btn => btn.classList.remove("active"));
+            html += `
+            <div style="
+                margin:10px 0;
+                padding:12px;
+                background:#1a1a1a;
+                border-radius:10px;
+                color:white;
+                border:1px solid #4B5320;
+            ">
 
-    button.classList.add("active");
+                <div class="${className}-section-title" style="cursor:pointer;font-weight:bold;">
+                    ${section}
+                </div>
 
-    const food = document.getElementById("foodSections");
-    const drinks = document.getElementById("drinksSections");
+                <div class="${className}-items" style="display:none;margin-top:10px;">
+            `;
 
-    const category = button.innerText.trim();
+            sections[section].forEach(item => {
 
-    if (category === "FOOD") {
+                html += `
+                    <div style="
+                        display:flex;
+                        justify-content:space-between;
+                        padding:8px 0;
+                        border-bottom:1px solid #333;
+                    ">
+                        <span>${item.name}</span>
+                        <span style="color:#9CAF50;">
+                            GHS ${Number(item.price).toFixed(2)}
+                        </span>
+                    </div>
+                `;
+            });
 
-        food.style.display = "block";
-        drinks.style.display = "none";
+            html += `</div></div>`;
+        });
 
-    } else if (category === "DRINKS") {
-
-        food.style.display = "none";
-        drinks.style.display = "block";
-
-    } else {
-
-        // For now hide both until we build them
-        food.style.display = "none";
-        drinks.style.display = "none";
+        return html;
     }
-}
 
-window.onload = function () {
-    document.getElementById("foodSections").style.display = "block";
-    document.getElementById("drinksSections").style.display = "none";
-};
+    foodContainer.innerHTML = render("FOOD MENU", foodSections, "food")
+        + render("DRINKS MENU", drinkSections, "drink")
+        + render("QUAD BIKE", quadSections, "quad")
+        + render("BOAT RIDES", boatSections, "boat");
+
+    // CLICK HANDLERS (ALL SAME SYSTEM)
+
+    function attach(className, itemClass) {
+
+        document.querySelectorAll("." + className + "-section-title")
+        .forEach(el => {
+
+            el.addEventListener("click", function () {
+
+                const all = document.querySelectorAll("." + className + "-items");
+                const current = this.nextElementSibling;
+
+                all.forEach(box => {
+                    if (box !== current) box.style.display = "none";
+                });
+
+                current.style.display =
+                    current.style.display === "block"
+                        ? "none"
+                        : "block";
+            });
+        });
+    }
+
+    attach("food");
+    attach("drink");
+    attach("quad");
+    attach("boat");
+});
 
 </script>
 
