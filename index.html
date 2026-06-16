@@ -1,3 +1,5 @@
+Menu website casa
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -176,6 +178,16 @@ div[onclick]{
 
 <script>
 
+const firebaseConfig = {
+    apiKey: "AIzaSyBrsJteLnC0AJsqQN2EDD07vXQX4MBveQk",
+    authDomain: "casa-lake-view-resort.firebaseapp.com",
+    projectId: "casa-lake-view-resort",
+    storageBucket: "casa-lake-view-resort.firebasestorage.app",
+    messagingSenderId: "783691618625",
+    appId: "1:783691618625:web:fe6bf67bb4585947ce69c0",
+    measurementId: "G-2SLSV010SB"
+};
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -186,7 +198,8 @@ db.collection("menu")
     const foodContainer = document.getElementById("foodSections");
     const drinkContainer = document.getElementById("drinksSections");
 
-   // We do NOT clear containers manually anymore
+   foodContainer.innerHTML = "";
+drinkContainer.innerHTML = "";
 
     const foodSections = {};
     const drinkSections = {};
@@ -230,7 +243,7 @@ db.collection("menu")
             border:1px solid #4B5320;
         ">
 
-            <div onclick="toggleFood(this)" style="cursor:pointer;font-weight:bold;">
+           <div class="food-section-title" style="cursor:pointer;font-weight:bold;">
                 ${section}
             </div>
 
@@ -258,6 +271,12 @@ db.collection("menu")
     });
 
     foodContainer.innerHTML = foodHTML;
+
+document.querySelectorAll(".food-section-title").forEach(el => {
+    el.addEventListener("click", function () {
+        toggleFood(this);
+    });
+});
 
     // =========================
     // 🍹 DRINKS RENDER
